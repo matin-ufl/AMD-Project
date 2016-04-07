@@ -27,8 +27,7 @@ find.wearTime <- function(accelerometer.1s.data = AC.1s) {
 }
 
 # Find wear times (with Miller outlier rejection)
-find.wearTime.exludeOutlier <- function(AC.1s, sample.per.min = 60, PID) {
-     AC.1m <- dataCollapser(AC.1s, TS = "TimeStamp", col = "VM", by = sample.per.min)
+find.wearTime.exludeOutlier <- function(AC.1m, PID) {
      data1m = wearingMarking(dataset = AC.1m,
                              frame = 90, 
                              perMinuteCts = 1,
@@ -37,8 +36,6 @@ find.wearTime.exludeOutlier <- function(AC.1s, sample.per.min = 60, PID) {
                              streamFrame = NULL, 
                              allowanceFrame= 2, 
                              newcolname = "wearing")
-     steps <- dataCollapser(AC.1s, TS = "TimeStamp", col = "steps", by = sample.per.min)
-     data1m$steps <- steps$steps
      
      # First step in defining outliers
      data1m$wearing[data1m$VM > 100000] <- "nw"
