@@ -1,0 +1,115 @@
+1- get scatter plot 3ds for all three classes versus averages and all three classes versus stds
+2- get heatmap of 6 variables
+3- get correlation plot of classes 
+4- use other class relationship metrics?
+	
+	CVD VS MOB
+			  Reference
+Prediction FALSE TRUE
+     FALSE   540  316
+     TRUE    168  188
+
+	CVD VS COG
+	          Reference
+Prediction FALSE TRUE
+     FALSE   621  235
+     TRUE    235  121
+	 
+	 MOB VS COG
+	           Reference
+Prediction FALSE TRUE
+     FALSE   523  185
+     TRUE    333  171
+	 
+using=> psych::phi(table(daily.df[,13],daily.df[,14]))
+
+Phi Coefficients:
+	CVD VS MOB : 0.15
+	CVD vs COG : 0.07
+	MOB VS COG : 0.08
+	
+	
+All suggesting not much of relationship between classes => potentially three different classifiers.
+5- plot featureplot matrix with respect to classes
+
+6- training classifiers for CVD
+Quadratic Discriminant Analysis 
+
+1212 samples
+   6 predictor
+   2 classes: 'FALSE', 'TRUE' 
+
+No pre-processing
+Resampling: Cross-Validated (5 fold, repeated 20 times) 
+Summary of sample sizes: 968, 970, 970, 970, 970, 969, ... 
+Resampling results
+
+  Accuracy   Kappa      Accuracy SD  Kappa SD  
+  0.6478069  0.1051488  0.03328317   0.05316606
+  
+ ----------------------------------------------- 
+ CART 
+
+1212 samples
+   6 predictor
+   2 classes: 'FALSE', 'TRUE' 
+
+No pre-processing
+Resampling: Cross-Validated (5 fold, repeated 20 times) 
+Summary of sample sizes: 968, 970, 970, 970, 970, 969, ... 
+Resampling results across tuning parameters:
+
+  cp           Accuracy   Kappa       Accuracy SD  Kappa SD  
+  0.004494382  0.6532995  0.03600596  0.038328544  0.05564973
+  0.019662921  0.7035088  0.02281186  0.008498207  0.03059963
+  0.025280899  0.7030568  0.01382346  0.006453117  0.02456480
+
+Accuracy was used to select the optimal model using  the largest value.
+The final value used for the model was cp = 0.01966292. 
+
+------------------------------------------------------
+Random Forest 
+
+1212 samples
+   6 predictor
+   2 classes: 'FALSE', 'TRUE' 
+
+No pre-processing
+Resampling: Cross-Validated (5 fold, repeated 20 times) 
+Summary of sample sizes: 968, 970, 970, 970, 970, 969, ... 
+Resampling results across tuning parameters:
+
+  mtry  Accuracy   Kappa       Accuracy SD  Kappa SD  
+  2     0.6892766  0.04789097  0.01536706   0.04466881
+  4     0.6828842  0.04082719  0.01641551   0.04572982
+  6     0.6803268  0.03766547  0.01713252   0.04914458
+
+Accuracy was used to select the optimal model using  the largest value.
+The final value used for the model was mtry = 2. 
+
+---------------------------------------------------------
+k-Nearest Neighbors 
+
+1212 samples
+   6 predictor
+   2 classes: 'FALSE', 'TRUE' 
+
+No pre-processing
+Resampling: Cross-Validated (5 fold, repeated 20 times) 
+Summary of sample sizes: 968, 970, 970, 970, 970, 969, ... 
+Resampling results across tuning parameters:
+
+  k   Accuracy   Kappa         Accuracy SD  Kappa SD  
+   1  0.5759485  -0.024531460  0.02756181   0.05726654
+   2  0.5829650  -0.004415074  0.02819517   0.06145284
+   3  0.6252925   0.005404040  0.02753423   0.06105481
+   4  0.6293389   0.018060677  0.02533586   0.05922812
+   5  0.6528501   0.023467464  0.02067994   0.05058303
+   6  0.6543763   0.029728467  0.02210282   0.05822036
+   7  0.6649849   0.019105923  0.01932300   0.04739509
+   8  0.6615965   0.012063058  0.02033886   0.04839415
+   9  0.6712928   0.010851993  0.01802481   0.04561995
+  10  0.6709214   0.010836993  0.01796965   0.04862497
+
+Accuracy was used to select the optimal model using  the largest value.
+The final value used for the model was k = 9. 
