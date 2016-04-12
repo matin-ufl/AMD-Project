@@ -3,12 +3,13 @@ library(randomForest)
 library(ggplot2)
 setwd("~/Workspaces/R workspace/Analysis of Multivariate Data/AMD-Project/Matin - Exploration/")
 # Loading the daily dataset (baseline)
-load("~/Dropbox/Courses/2016/Spring/Analysis of Multivariate Data/Project/Datasets/d03_datasets for analysis/d03_circadian_third.Rdata")
+load("~/Dropbox/Courses/2016/Spring/Analysis of Multivariate Data/Project/Datasets/d03_datasets for analysis/d07_newCircadian.Rdata")
 
 # Mobility -----------------------------------------------------------------
-classification.df <- circadian.df[, c(1:17)]
+
+classification.df <- newCircadian.df[, c(1:17)]
 classification.df[is.na(classification.df)] <- 0
-classification.df$class.var <- circadian.df$class.mobilityImpaired
+classification.df$class.var <- newCircadian.df$class.mobilityImpaired
 
 # Scaling the data for kNN
 scaled.classification.df <- classification.df
@@ -89,7 +90,7 @@ rm(number.of.features)
 
 
 # Cognition Dysfunction -----------------------------------------------------------------
-classification.df$class.var <- circadian.df$class.cognitionImpaired
+classification.df$class.var <- newCircadian.df$class.cognitionImpaired
 
 # Scaling the data for kNN
 scaled.classification.df <- classification.df
