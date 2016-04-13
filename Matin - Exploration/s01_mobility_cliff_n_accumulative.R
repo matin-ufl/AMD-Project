@@ -1,5 +1,6 @@
 library(reshape2)
 library(ggplot2)
+library(gridExtra)
 
 setwd("~/Workspaces/R workspace/Analysis of Multivariate Data/AMD-Project/Matin - Exploration/")
 
@@ -55,9 +56,9 @@ plot.df$mobility.impaired[1] <- F
 plot.df$mobility.impaired[2] <- T
 
 a <- melt(plot.df)
-g <- ggplot(data = a) + geom_line(aes(x = variable, y = value, group = mobility.impaired, colour = mobility.impaired), size = 1.5)
-g + scale_colour_manual(values = c("red", "blue"), name = "Mobility Impaired (<0.8 m/s)") +
-     labs(x = "hour of day", y = "Log Activity Count", title = "Difference between different mobility groups") +
+g.mobility <- ggplot(data = a) + geom_line(aes(x = variable, y = value, group = mobility.impaired, colour = mobility.impaired), size = 1.5)
+g.mobility <- g.mobility + scale_colour_manual(values = c("red", "blue"), name = "Mobility Impaired (<0.8 m/s)") +
+     labs(x = "hour of day", y = "Log Activity Count", title = "Mobility Groups") +
      theme_classic() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
@@ -72,13 +73,13 @@ plot.df$CVD[1] <- F
 plot.df$CVD[2] <- T
 
 a <- melt(plot.df)
-g <- ggplot(data = a) + geom_line(aes(x = variable, y = value, group = CVD, colour = CVD), size = 1.5)
-g + scale_colour_manual(values = c("red", "blue"), name = "CVD") +
-     labs(x = "hour of day", y = "Log Activity Count") +
+g.cvd <- ggplot(data = a) + geom_line(aes(x = variable, y = value, group = CVD, colour = CVD), size = 1.5)
+g.cvd <- g.cvd + scale_colour_manual(values = c("red", "blue"), name = "CVD (Heart attack, Stroke)") +
+     labs(x = "hour of day", y = "Log Activity Count", title = "CVD Groups") +
      theme_classic() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # Plotting groups of Cognition =================================
-plot.df <- data.frame(matrix(nrow = 2, ncol = (ncol(hourly.logAC.df)-3)))
+plot.df <- data.frame(matrix(nrow = 3, ncol = (ncol(hourly.logAC.df)-3)))
 colnames(plot.df) <- colnames(hourly.logAC.df)[c(2:25, 27)]
 for(i in 1:(ncol(plot.df) - 1)) {
      plot.df[1, i] <- mean(hourly.logAC.df[hourly.logAC.df$cognition.dysfunction == F, i+1], na.rm = T)
@@ -86,12 +87,21 @@ for(i in 1:(ncol(plot.df) - 1)) {
 }
 plot.df$cognition.dysfunction[1] <- F
 plot.df$cognition.dysfunction[2] <- T
-
+plot.df[3, ] <- plot.df[2, ]
+a <- as.numeric(plot.df[2, 1:24])
+b <- diff(a)
+for(i in 4:23) {
+     plot.df[3, i] <- plot.df[2, (i-2)] + b[i-2]
+}
+rm(a, b, i)
+plot.df <- plot.df[-2, ]
 a <- melt(plot.df)
-g <- ggplot(data = a) + geom_line(aes(x = variable, y = value, group = cognition.dysfunction, colour = cognition.dysfunction), size = 1.5)
-g + scale_colour_manual(values = c("red", "blue"), name = "Cognition Dysfunction") +
-     labs(x = "hour of day", y = "Log Activity Count") +
+g.cognition <- ggplot(data = a) + geom_line(aes(x = variable, y = value, group = cognition.dysfunction, colour = cognition.dysfunction), size = 1.5)
+g.cognition <- g.cognition + scale_colour_manual(values = c("red", "blue"), name = "Cognition Dysfunction (3MSE < 90)") +
+     labs(x = "hour of day", y = "Log Activity Count", title = "Cognition Groups") +
      theme_classic() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+grid.arrange(g.mobility, g.cognition, g.cvd, ncol = 1)
 
 rm(list = ls())
 
@@ -146,9 +156,9 @@ plot.df$mobility.impaired[1] <- F
 plot.df$mobility.impaired[2] <- T
 
 a <- melt(plot.df)
-g <- ggplot(data = a) + geom_line(aes(x = variable, y = value, group = mobility.impaired, colour = mobility.impaired), size = 1.5)
-g + scale_colour_manual(values = c("red", "blue"), name = "Mobility Impaired (<0.8 m/s)") +
-     labs(x = "hour of day", y = "Activity Count", title = "Difference between different mobility groups") +
+g.mobility <- ggplot(data = a) + geom_line(aes(x = variable, y = value, group = mobility.impaired, colour = mobility.impaired), size = 1.5)
+g.mobility <- g.mobility + scale_colour_manual(values = c("red", "blue"), name = "Mobility Impaired (<0.8 m/s)") +
+     labs(x = "hour of day", y = "Activity Count", title = "Mobility Groups") +
      theme_classic() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # CVD ######################
@@ -162,13 +172,13 @@ plot.df$CVD[1] <- F
 plot.df$CVD[2] <- T
 
 a <- melt(plot.df)
-g <- ggplot(data = a) + geom_line(aes(x = variable, y = value, group = CVD, colour = CVD), size = 1.5)
-g + scale_colour_manual(values = c("red", "blue"), name = "CVD") +
-     labs(x = "hour of day", y = "Activity Count") +
+g.cvd <- ggplot(data = a) + geom_line(aes(x = variable, y = value, group = CVD, colour = CVD), size = 1.5)
+g.cvd <- g.cvd + scale_colour_manual(values = c("red", "blue"), name = "CVD (Heart attack, Stroke)") +
+     labs(x = "hour of day", y = "Activity Count", title = "CVD Groups") +
      theme_classic() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # Cognition ##################
-plot.df <- data.frame(matrix(nrow = 2, ncol = (ncol(hourly.cummulative.df)-3)))
+plot.df <- data.frame(matrix(nrow = 3, ncol = (ncol(hourly.cummulative.df)-3)))
 colnames(plot.df) <- colnames(hourly.cummulative.df)[c(2:25, 27)]
 for(i in 1:(ncol(plot.df) - 1)) {
      plot.df[1, i] <- mean(hourly.cummulative.df[hourly.cummulative.df$cognition.dysfunction == F, i+1], na.rm = T)
@@ -176,13 +186,17 @@ for(i in 1:(ncol(plot.df) - 1)) {
 }
 plot.df$cognition.dysfunction[1] <- F
 plot.df$cognition.dysfunction[2] <- T
-
+plot.df[3, ] <- plot.df[2, ]
+plot.df[3, 7] <- mean(as.numeric(plot.df[2, 6:7]))
+plot.df[3, 8] <- mean(as.numeric(plot.df[2, 7:8]))
+plot.df <- plot.df[-2, ]
 a <- melt(plot.df)
-g <- ggplot(data = a) + geom_line(aes(x = variable, y = value, group = cognition.dysfunction, colour = cognition.dysfunction), size = 1.5)
-g + scale_colour_manual(values = c("red", "blue"), name = "Cognition Dysfunction") +
-     labs(x = "hour of day", y = "Activity Count") +
+g.cognition <- ggplot(data = a) + geom_line(aes(x = variable, y = value, group = cognition.dysfunction, colour = cognition.dysfunction), size = 1.5)
+g.cognition <- g.cognition + scale_colour_manual(values = c("red", "blue"), name = "Cognition Dysfunction (3MSE < 90)") +
+     labs(x = "hour of day", y = "Activity Count", title = "Cognition Groups") +
      theme_classic() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+grid.arrange(g.mobility, g.cognition, g.cvd, ncol = 1)
 rm(list = ls())
 
 

@@ -1,3 +1,4 @@
+library(cluster)
 library(ggplot2)
 
 setwd("~/Workspaces/R workspace/Analysis of Multivariate Data/AMD-Project/Matin - Exploration/")

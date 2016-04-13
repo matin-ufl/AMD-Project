@@ -171,7 +171,7 @@ rm(number.of.features)
 
 
 # Cardio Vascular Disease -----------------------------------------------------------------
-classification.df$class.var <- circadian.df$class.cvd
+classification.df$class.var <- newCircadian.df$class.cvd
 
 # Scaling the data for kNN
 scaled.classification.df <- classification.df
